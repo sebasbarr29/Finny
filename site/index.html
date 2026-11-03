@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Finny</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Finny is your AI finance buddy for small businesses. In development. Built by Sebastián Barrantes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one column of full-width bands; hero splits copy | sample-report card, features use an asymmetric 3-col grid. */
+:root {
+  --bg: #f4f7f6;
+  --surface: #ffffff;
+  --ink: #0d1d22;
+  --muted: #4f6267;
+  --line: #d9e3e1;
+  --lagoon: #0a8f84;
+  --lagoon-soft: #d6f1ed;
+  --sun: #ffd447;
+  --sun-ink: #3d3200;
+  --coral: #e5533d;
+  --good: #0a7d55;
+  --band: #0d1d22;
+  --band-ink: #eef5f3;
+  --band-muted: #9fb4b1;
+  --shadow: 0 1px 2px rgb(13 29 34 / 6%), 0 12px 32px -12px rgb(13 29 34 / 18%);
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --radius: 18px;
+  --max: 1120px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1518; --surface: #12211f; --ink: #e8f1ef; --muted: #9db0ad; --line: #22363a;
+    --lagoon: #3fd1c1; --lagoon-soft: #123a37; --sun: #ffd447; --sun-ink: #2b2300; --coral: #ff7a63; --good: #4fd69c;
+    --band: #050c0e; --band-ink: #eef5f3; --band-muted: #93a8a5;
+    --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 16px 40px -16px rgb(0 0 0 / 60%);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1518; --surface: #12211f; --ink: #e8f1ef; --muted: #9db0ad; --line: #22363a;
+  --lagoon: #3fd1c1; --lagoon-soft: #123a37; --sun: #ffd447; --sun-ink: #2b2300; --coral: #ff7a63; --good: #4fd69c;
+  --band: #050c0e; --band-ink: #eef5f3; --band-muted: #93a8a5;
+  --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 16px 40px -16px rgb(0 0 0 / 60%);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 1.0625rem; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--lagoon); outline-offset: 3px; border-radius: 6px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.08; margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+p { margin: 0; }
+
+.wrap {
+  max-width: calc(var(--max) + 2 * 24px); margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 720px) { .wrap { padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); } }
+
+.eyebrow {
+  font-family: var(--mono); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--lagoon);
+}
+.pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 6px 12px; border-radius: 999px; background: var(--sun); color: var(--sun-ink); white-space: nowrap;
+}
+.pill .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: blink 1.6s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: 0.25; } }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font: 600 1rem/1 var(--body); text-decoration: none; padding: 15px 22px; border-radius: 14px;
+  border: 2px solid var(--ink); transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn-primary { background: var(--ink); color: var(--bg); box-shadow: 4px 4px 0 var(--lagoon); }
+.btn-primary:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--lagoon); }
+.btn-ghost { background: transparent; color: var(--ink); }
+.btn-ghost:hover { background: var(--surface); }
+
+/* Nav */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 1.4rem; text-decoration: none; letter-spacing: -0.03em; }
+.logo svg { width: 34px; height: 34px; flex: none; }
+.nav-links { display: flex; align-items: center; gap: 24px; font-weight: 500; font-size: 0.95rem; }
+.nav-links a { text-decoration: none; color: var(--muted); }
+.nav-links a:hover { color: var(--ink); }
+@media (max-width: 760px) { .nav-links a:not(.pill) { display: none; } }
+
+/* Hero */
+.hero { padding-block: 64px 80px; }
+.hero .wrap { display: grid; gap: 48px; align-items: center; }
+@media (min-width: 940px) { .hero .wrap { grid-template-columns: 1.1fr 0.9fr; gap: 56px; } }
+.hero-copy { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.hero h1 { font-size: clamp(2.6rem, 6.4vw, 4.6rem); font-weight: 800; }
+.hero h1 .hl { background: linear-gradient(transparent 58%, var(--sun) 58%, var(--sun) 92%, transparent 92%); padding-inline: 4px; color: var(--sun-ink); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.hero .lede { font-size: 1.2rem; color: var(--muted); max-width: 34em; }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; }
+.byline { display: flex; align-items: center; gap: 12px; font-size: 0.98rem; color: var(--muted); }
+.byline strong { color: var(--ink); font-weight: 700; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--lagoon); color: var(--bg); font-family: var(--display); font-weight: 800; font-size: 0.95rem; flex: none; }
+.for-who { display: flex; flex-wrap: wrap; gap: 8px; }
+.for-who span { font-size: 0.85rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
+
+/* Sample report card */
+.report {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 24px; box-shadow: var(--shadow);
+  padding: 22px; display: flex; flex-direction: column; gap: 18px; min-width: 0; position: relative;
+  transform: rotate(1.2deg);
+}
+@media (max-width: 939px) { .report { transform: none; } }
+.report-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.report-title { font-family: var(--display); font-weight: 700; font-size: 1.1rem; }
+.report-sub { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--bg); }
+.lang button { font: 600 0.78rem/1 var(--mono); border: 0; background: transparent; color: var(--muted); padding: 7px 11px; border-radius: 999px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.kpi { background: var(--bg); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.kpi .k { font-size: 0.72rem; color: var(--muted); font-weight: 600; }
+.kpi .v { font-family: var(--mono); font-weight: 600; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.kpi .d { font-family: var(--mono); font-size: 0.72rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.up { color: var(--good); } .down { color: var(--coral); }
+.bars { display: flex; align-items: flex-end; gap: 8px; height: 76px; padding-top: 4px; border-bottom: 1px solid var(--line); }
+.bars div { flex: 1; border-radius: 6px 6px 0 0; background: var(--lagoon-soft); }
+.bars div.now { background: var(--lagoon); }
+.bars-lbl { display: flex; gap: 8px; font-family: var(--mono); font-size: 0.68rem; color: var(--muted); margin-top: 6px; }
+.bars-lbl span { flex: 1; text-align: center; }
+.summary { display: flex; flex-direction: column; gap: 10px; }
+.summary p { font-size: 0.95rem; line-height: 1.5; }
+.summary .tag { font-family: var(--mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 2px; }
+.next { background: var(--lagoon-soft); border-radius: 12px; padding: 12px 14px; }
+.sample-note { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); text-align: center; letter-spacing: 0.04em; }
+
+/* Sections */
+section.block { padding-block: 88px; }
+.sec-head { display: flex; flex-direction: column; gap: 14px; max-width: 40rem; margin-bottom: 48px; }
+.sec-head h2 { font-size: clamp(2rem, 4.4vw, 3rem); font-weight: 800; }
+.sec-head p { color: var(--muted); font-size: 1.1rem; }
+
+/* How it works (dark band) */
+.band { background: var(--band); color: var(--band-ink); }
+.band .sec-head p { color: var(--band-muted); }
+.band .eyebrow { color: var(--sun); }
+.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); counter-reset: step; }
+.steps li { counter-increment: step; display: flex; flex-direction: column; gap: 12px; padding: 24px; border-radius: var(--radius); border: 1px solid rgb(255 255 255 / 12%); min-width: 0; }
+.steps li::before { content: counter(step); font-family: var(--display); font-weight: 800; font-size: 1.2rem; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--sun); color: var(--sun-ink); }
+.steps h3 { font-size: 1.25rem; font-weight: 700; }
+.steps p { color: var(--band-muted); font-size: 0.98rem; }
+.files { display: flex; gap: 6px; flex-wrap: wrap; }
+.files code { font-family: var(--mono); font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; background: rgb(255 255 255 / 10%); color: var(--band-ink); }
+
+/* Features */
+.features { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .features { grid-template-columns: repeat(2, minmax(0, 1fr)); } .feat.wide { grid-column: span 2; } }
+@media (min-width: 1000px) { .features { grid-template-columns: repeat(3, minmax(0, 1fr)); } .feat.wide { grid-column: span 2; } }
+.feat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.feat .ico { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: var(--lagoon-soft); color: var(--lagoon); }
+.feat .ico svg { width: 24px; height: 24px; }
+.feat h3 { font-size: 1.35rem; font-weight: 700; }
+.feat p { color: var(--muted); }
+.feat.wide { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.feat.wide p { color: color-mix(in srgb, var(--bg) 72%, var(--ink)); }
+.feat.wide .ico { background: var(--sun); color: var(--sun-ink); }
+.tips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 6px; }
+.tips span { font-family: var(--mono); font-size: 0.75rem; font-weight: 600; padding: 6px 10px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--bg) 30%, transparent); }
+.chat { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+.chat span { font-size: 0.88rem; padding: 8px 12px; border-radius: 14px; max-width: 90%; }
+.chat .q { align-self: flex-end; background: var(--ink); color: var(--bg); border-bottom-right-radius: 4px; }
+.chat .a { align-self: flex-start; background: var(--bg); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.checks { list-style: none; margin: auto 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.92rem; }
+.checks li { display: flex; gap: 10px; align-items: center; }
+.checks li::before { content: ""; width: 16px; height: 16px; border-radius: 5px; border: 2px solid var(--lagoon); flex: none; }
+.checks li.done::before { background: var(--lagoon); box-shadow: inset 0 0 0 2px var(--surface); }
+.spark { margin-top: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.spark div { background: var(--bg); border-radius: 10px; padding: 10px; font-size: 0.78rem; color: var(--muted); font-weight: 600; display: flex; flex-direction: column; gap: 6px; }
+.spark svg { width: 100%; height: 26px; }
+
+/* Pricing */
+.pricing .wrap { display: grid; gap: 40px; align-items: center; }
+@media (min-width: 900px) { .pricing .wrap { grid-template-columns: 1fr 1fr; gap: 64px; } .pricing .sec-head { margin-bottom: 0; } }
+.plan { background: var(--surface); border: 2px solid var(--ink); border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 22px; box-shadow: 8px 8px 0 var(--lagoon); min-width: 0; }
+.plan-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.plan-name { font-family: var(--display); font-weight: 700; font-size: 1.3rem; }
+.price { display: flex; align-items: baseline; gap: 6px; }
+.price .amt { font-family: var(--display); font-weight: 800; font-size: 4rem; line-height: 1; letter-spacing: -0.04em; }
+.price .per { color: var(--muted); font-weight: 600; }
+.plan ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.plan li { display: flex; gap: 12px; align-items: flex-start; }
+.plan li svg { width: 20px; height: 20px; flex: none; color: var(--lagoon); margin-top: 3px; }
+.plan .fine { font-size: 0.88rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 16px; }
+
+/* Footer */
+footer { background: var(--band); color: var(--band-ink); }
+footer .wrap { padding-block: 56px 40px; display: flex; flex-direction: column; gap: 32px; }
+.foot-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px; }
+.foot-top .logo { color: var(--band-ink); }
+.foot-tag { color: var(--band-muted); margin-top: 8px; }
+.built { font-family: var(--display); font-weight: 700; font-size: clamp(1.3rem, 3vw, 1.8rem); }
+.built span { color: var(--sun); }
+.foot-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 0.85rem; color: var(--band-muted); border-top: 1px solid rgb(255 255 255 / 12%); padding-top: 20px; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Finny home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="12" fill="var(--lagoon)"/><path d="M9 22c4-7 12-9 19-5l5-4v14l-5-4c-7 4-15 2-19-1z" fill="var(--bg)"/><circle cx="15" cy="20.5" r="1.6" fill="var(--lagoon)"/></svg>
+      Finny
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <span class="pill"><span class="dot"></span>In development</span>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="pill" style="align-self:flex-start"><span class="dot"></span>In development · Class project</span>
+        <h1>Your AI <span class="hl">finance buddy</span> for small businesses.</h1>
+        <p class="lede">Finny helps clinics and small shops understand their numbers and find ways to improve. Upload a monthly P&amp;L or bank CSV and get a plain-English or Spanish report on what changed, why it matters, and what to do next.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#how">See how it works</a>
+          <a class="btn btn-ghost" href="#features">Planned features</a>
+        </div>
+        <div class="for-who" aria-label="Built for">
+          <span>Small clinics</span><span>Independent shops</span><span>Small business owners</span>
+        </div>
+        <div class="byline">
+          <span class="avatar" aria-hidden="true">SB</span>
+          <span>Built by <strong>Sebastián Barrantes</strong></span>
+        </div>
+      </div>
+
+      <figure class="report" aria-label="Sample Finny monthly report with example numbers" style="margin:0">
+        <div class="report-head">
+          <div>
+            <div class="report-title" data-en="Monthly report · October" data-es="Reporte mensual · Octubre">Monthly report · October</div>
+            <div class="report-sub" data-en="Example clinic · sample_pnl_oct.csv" data-es="Clínica de ejemplo · sample_pnl_oct.csv">Example clinic · sample_pnl_oct.csv</div>
+          </div>
+          <div class="lang" role="group" aria-label="Report language">
+            <button type="button" id="lang-en" aria-pressed="true" data-lang="en">EN</button>
+            <button type="button" id="lang-es" aria-pressed="false" data-lang="es">ES</button>
+          </div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><span class="k" data-en="Revenue" data-es="Ingresos">Revenue</span><span class="v">$42,180</span><span class="d up">▲ 6.2%</span></div>
+          <div class="kpi"><span class="k" data-en="Expenses" data-es="Gastos">Expenses</span><span class="v">$35,940</span><span class="d down">▲ 11.4%</span></div>
+          <div class="kpi"><span class="k" data-en="Net profit" data-es="Utilidad neta">Net profit</span><span class="v">$6,240</span><span class="d down">▼ 16.0%</span></div>
+        </div>
+
+        <div>
+          <div class="bars" aria-hidden="true">
+            <div style="height:58%"></div><div style="height:66%"></div><div style="height:72%"></div><div style="height:64%"></div><div style="height:78%"></div><div class="now" style="height:62%"></div>
+          </div>
+          <div class="bars-lbl" aria-hidden="true"><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span></div>
+        </div>
+
+        <div class="summary">
+          <p><span class="tag" data-en="What changed" data-es="Qué cambió">What changed</span>
+            <span data-en="Sales went up, but profit went down. Supplies cost $2,900 more than in September." data-es="Las ventas subieron, pero la utilidad bajó. Los insumos costaron $2,900 más que en septiembre.">Sales went up, but profit went down. Supplies cost $2,900 more than in September.</span></p>
+          <p class="next"><span class="tag" data-en="What to do next" data-es="Qué hacer ahora">What to do next</span>
+            <span data-en="Compare quotes from two suppliers and set a monthly supplies budget." data-es="Compara cotizaciones de dos proveedores y define un presupuesto mensual de insumos.">Compare quotes from two suppliers and set a monthly supplies budget.</span></p>
+        </div>
+        <figcaption class="sample-note" data-en="Design preview with made-up example numbers" data-es="Vista previa del diseño con números de ejemplo inventados">Design preview with made-up example numbers</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="block band" id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">How it works</span>
+        <h2>From spreadsheet to game plan in four steps.</h2>
+        <p>No accounting degree needed. Bring the files you already have.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <h3>Upload your numbers</h3>
+          <p>Drop in a monthly P&amp;L or a bank export.</p>
+          <div class="files"><code>.csv</code><code>P&amp;L</code><code>bank export</code></div>
+        </li>
+        <li>
+          <h3>Get your report</h3>
+          <p>Finny explains what changed, why it matters, and what to do next, in plain English or Spanish.</p>
+        </li>
+        <li>
+          <h3>Ask follow-ups</h3>
+          <p>Ask Finny questions about your results, like why costs jumped or which month was strongest.</p>
+        </li>
+        <li>
+          <h3>Act on a plan</h3>
+          <p>Turn insights into a clear monthly action plan and track your key numbers over time.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="features">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Planned features</span>
+        <h2>Everything a small business needs to read its own numbers.</h2>
+        <p>These features are being designed and built now. None of them are live yet.</p>
+      </div>
+
+      <div class="features">
+        <article class="feat">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div>
+          <h3>Monthly financial reports</h3>
+          <p>A clear summary of every month: revenue, expenses, profit, and what moved, written in plain English or Spanish.</p>
+        </article>
+
+        <article class="feat wide">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V16h8v-1.3A7 7 0 0 0 12 2z"/></svg></div>
+          <h3>Business Tips Report</h3>
+          <p>A full report of practical recommendations based on your own numbers, covering the four areas that decide whether a small business grows.</p>
+          <div class="tips"><span>Profit</span><span>Cash flow</span><span>Costs</span><span>Growth</span></div>
+        </article>
+
+        <article class="feat">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></div>
+          <h3>Ask Finny</h3>
+          <p>Ask follow-up questions about your report and get straight answers.</p>
+          <div class="chat" aria-label="Example question">
+            <span class="q">Why did profit drop in October?</span>
+            <span class="a">Supplies went up more than sales did.</span>
+          </div>
+        </article>
+
+        <article class="feat">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div>
+          <h3>Financial dashboard</h3>
+          <p>Track your key numbers month over month in one place.</p>
+          <div class="spark" aria-hidden="true">
+            <div>Revenue<svg viewBox="0 0 100 26" preserveAspectRatio="none"><polyline fill="none" stroke="var(--lagoon)" stroke-width="2.5" points="0,20 20,16 40,18 60,10 80,12 100,5"/></svg></div>
+            <div>Cash<svg viewBox="0 0 100 26" preserveAspectRatio="none"><polyline fill="none" stroke="var(--coral)" stroke-width="2.5" points="0,8 20,12 40,9 60,15 80,14 100,18"/></svg></div>
+          </div>
+        </article>
+
+        <article class="feat">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+          <h3>Action plan</h3>
+          <p>A short monthly to-do list built from your report, so insights turn into action.</p>
+          <ul class="checks" aria-label="Example action plan">
+            <li class="done">Review supplier prices</li>
+            <li>Follow up on unpaid invoices</li>
+            <li>Set a monthly marketing budget</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block pricing" id="pricing">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Pricing</span>
+        <h2>One simple plan.</h2>
+        <p>Finny is planned as a single monthly subscription with every feature included. It is not available for purchase yet.</p>
+      </div>
+      <div class="plan">
+        <div class="plan-top">
+          <span class="plan-name">Finny</span>
+          <span class="pill">Planned price</span>
+        </div>
+        <div class="price"><span class="amt">$29</span><span class="per">/ month</span></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Monthly financial reports in English or Spanish</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Business Tips Report</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Ask Finny follow-up questions</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Financial dashboard</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Monthly action plan</li>
+        </ul>
+        <p class="fine">Finny is in development. Pricing may change before launch.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <a class="logo" href="#top">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="12" fill="var(--sun)"/><path d="M9 22c4-7 12-9 19-5l5-4v14l-5-4c-7 4-15 2-19-1z" fill="var(--band)"/><circle cx="15" cy="20.5" r="1.6" fill="var(--sun)"/></svg>
+          Finny
+        </a>
+        <p class="foot-tag">Your AI finance buddy for small businesses.</p>
+      </div>
+      <p class="built">Built by <span>Sebastián Barrantes</span></p>
+    </div>
+    <div class="foot-bottom">
+      <span>Finny is in development as a class project. Not yet available.</span>
+      <span>© 2026 Sebastián Barrantes</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll('.lang button');
+  function setLang(lang) {
+    document.querySelectorAll('.report [data-' + lang + ']').forEach(function (el) {
+      el.textContent = el.getAttribute('data-' + lang);
+    });
+    buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+  }
+  buttons.forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.lang); }); });
+})();
+</script>
+</body>
+</html>
