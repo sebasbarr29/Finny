@@ -14,3 +14,7 @@ Repository **Settings → Pages → Build and deployment → Source: GitHub Acti
 ## Preview locally
 
 Open `site/index.html` in a browser.
+
+## Vercel
+
+`vercel.json` tells Vercel to serve the `site/` folder as-is (no build step). Import the repo in Vercel with the framework preset "Other"; settings in `vercel.json` take priority over the dashboard.
