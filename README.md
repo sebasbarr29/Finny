@@ -1,20 +1,23 @@
 # Finny
 
-Your AI finance buddy for small businesses. One-page website for a class project, built by Sebastián Barrantes.
+Your AI finance buddy for small businesses. Built by Sebastián Barrantes.
 
-Finny is **in development**. The site is static (HTML/CSS only): no authentication, database, payments, or AI features yet.
+Finny turns a monthly P&L or bank CSV into a plain-language Monthly Report and a Business Tips Report, in English or Spanish.
 
-- Page: `site/index.html`
-- Deploy: `.github/workflows/pages.yml` publishes `site/` to GitHub Pages on every push.
+## Tech
 
-## Enable GitHub Pages (one time)
+- Next.js 15 (App Router) + React 19 + TypeScript
+- Deployed on Vercel (`vercel.json` pins the framework to Next.js)
 
-Repository **Settings → Pages → Build and deployment → Source: GitHub Actions**. Then re-run the "Deploy to GitHub Pages" workflow (Actions tab).
+## Run locally
 
-## Preview locally
+```bash
+npm install
+npm run dev
+```
 
-Open `site/index.html` in a browser.
+Then open http://localhost:3000.
 
-## Vercel
+## Secrets
 
-`vercel.json` tells Vercel to serve the `site/` folder as-is (no build step). Import the repo in Vercel with the framework preset "Other"; settings in `vercel.json` take priority over the dashboard.
+Never commit API keys. Put them in `.env.local` (ignored by git) for local work and in Vercel → Project → Settings → Environment Variables for the live site.
