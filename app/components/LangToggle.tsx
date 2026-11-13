@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 /**
- * English / Español switch for a saved report. If the report doesn't exist in the chosen
+ * English / Spanish switch for a saved report. If the report doesn't exist in the chosen
  * language yet, Finny writes it (about a minute) and saves it before switching.
  */
 export default function LangToggle({
@@ -55,7 +55,7 @@ export default function LangToggle({
         {(["en", "es"] as const).map((l) => (
           <button key={l} type="button" aria-pressed={current === l} className={current === l ? "on" : undefined} disabled={!!busy} onClick={() => choose(l)}>
             {busy === l && <span className="spinner sm" aria-hidden="true" />}
-            {l === "en" ? "English" : "Español"}
+            {l === "en" ? "English" : "Spanish"}
           </button>
         ))}
       </div>

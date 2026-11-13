@@ -6,7 +6,7 @@ import ReportPicker from "@/app/components/ReportPicker";
 import { TipsGrid } from "@/app/components/ReportView";
 import { IconArrow } from "@/app/components/icons";
 import { requireUser } from "@/lib/auth";
-import { localPeriod, REPORT_T, type Lang } from "@/lib/i18n";
+import { REPORT_T, type Lang } from "@/lib/i18n";
 import { pickReport } from "@/lib/pick";
 import { contentIn, getReport, listReports } from "@/lib/reports";
 
@@ -36,14 +36,14 @@ export default async function TipsPage({ searchParams }: { searchParams: Promise
   const wanted: Lang = q === "es" ? "es" : q === "en" ? "en" : report.language;
   const lang: Lang = contentIn(report, wanted) ? wanted : report.language;
   const content = contentIn(report, lang)!;
-  const t = REPORT_T[lang];
+  const t = REPORT_T.en;
 
   return (
     <div className="page">
       <PageHeader
         eyebrow="Business tips"
-        title={`${t.tips} · ${localPeriod(report.period_label, lang)}`}
-        description={lang === "es" ? "Recomendaciones prácticas basadas en los números de este mes." : "Practical recommendations based on this month's numbers."}
+        title={`${t.tips} · ${report.period_label}`}
+        description={`Practical recommendations based on this month's numbers. Tips written in ${lang === "es" ? "Spanish" : "English"}.`}
         actions={
           <>
             <ReportPicker reports={options} selected={report.id} />
@@ -53,7 +53,7 @@ export default async function TipsPage({ searchParams }: { searchParams: Promise
       />
       <TipsGrid tips={content.tips_report} lang={lang} />
       <div className="row-actions">
-        <Link className="text-link" href={`/reports/${report.id}?lang=${lang}`}>{lang === "es" ? "Ver el reporte completo" : "Read the full report"} <IconArrow /></Link>
+        <Link className="text-link" href={`/reports/${report.id}?lang=${lang}`}>Read the full report <IconArrow /></Link>
         <Link className="text-link" href={`/plan?report=${report.id}`}>{t.plan} <IconArrow /></Link>
       </div>
       <p className="disclaimer">{t.disclaimer}</p>

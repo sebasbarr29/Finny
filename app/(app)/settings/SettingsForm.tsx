@@ -32,7 +32,7 @@ export default function SettingsForm({
       <fieldset className="field radio-group">
         <legend>Preferred report language</legend>
         <label><input type="radio" name="language" value="en" defaultChecked={initial.language === "en"} /> English</label>
-        <label><input type="radio" name="language" value="es" defaultChecked={initial.language === "es"} /> Español</label>
+        <label><input type="radio" name="language" value="es" defaultChecked={initial.language === "es"} /> Spanish</label>
         <small>Used as the default when you upload. You can still pick per report.</small>
       </fieldset>
       <label className="field">

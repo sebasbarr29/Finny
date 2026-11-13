@@ -43,7 +43,7 @@ export default async function PlanPage({ searchParams }: { searchParams: Promise
         description="Your next steps from this month's report. Tick items off as you go — your progress is saved."
         actions={<ReportPicker reports={options} selected={report.id} />}
       />
-      <Checklist items={items} />
+      <Checklist items={items} lang={report.language} />
       <div className="row-actions">
         <Link className="text-link" href={`/reports/${report.id}`}>Read the full report <IconArrow /></Link>
         <Link className="text-link" href={`/tips?report=${report.id}`}>Business tips <IconArrow /></Link>

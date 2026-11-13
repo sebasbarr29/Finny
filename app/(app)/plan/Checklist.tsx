@@ -13,7 +13,7 @@ const CATEGORIES: { key: Item["category"]; label: string; tone: string }[] = [
 ];
 const PRIORITY_LABEL = { high: "High priority", medium: "Medium priority", low: "Low priority" };
 
-export default function Checklist({ items: initial }: { items: Item[] }) {
+export default function Checklist({ items: initial, lang }: { items: Item[]; lang: "en" | "es" }) {
   const [items, setItems] = useState(initial);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState<string | null>(null);
@@ -64,7 +64,7 @@ export default function Checklist({ items: initial }: { items: Item[] }) {
                     <label>
                       <input type="checkbox" checked={i.done} onChange={() => toggle(i)} disabled={saving === i.id} />
                       <span className="cb" aria-hidden="true">{i.done && <IconCheck />}</span>
-                      <span className="task">{i.task}</span>
+                      <span className="task" lang={lang}>{i.task}</span>
                     </label>
                     <span className={`prio ${i.priority}`}>{PRIORITY_LABEL[i.priority]}</span>
                   </li>

@@ -42,10 +42,10 @@ export default async function ReportsPage() {
                   </div>
                   <span className="rc-tags">
                     {r.is_sample && <span className="pill">Sample</span>}
-                    <span className="pill">{r.language === "es" ? "Español" : "English"}</span>
+                    <span className="pill">{r.language === "es" ? "Spanish" : "English"}</span>
                   </span>
                 </div>
-                {r.headline && <p className="rc-summary">{r.headline}</p>}
+                {r.headline && <p className="rc-summary" lang={r.language}>{r.headline}</p>}
                 <dl className="rc-nums">
                   <div><dt>Revenue</dt><dd className="num">{money(r.revenue)}</dd></div>
                   <div><dt>Expenses</dt><dd className="num">{money(r.expenses)}</dd></div>

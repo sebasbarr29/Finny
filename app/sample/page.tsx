@@ -4,7 +4,7 @@ import ReportView from "@/app/components/ReportView";
 import SiteFooter from "@/app/components/SiteFooter";
 import SiteHeader from "@/app/components/SiteHeader";
 import { IconArrow } from "@/app/components/icons";
-import { localPeriod, REPORT_T, type Lang } from "@/lib/i18n";
+import { REPORT_T, type Lang } from "@/lib/i18n";
 import { getSampleReport } from "@/lib/reports";
 
 export const metadata: Metadata = { title: "Sample report | Finny" };
@@ -14,7 +14,7 @@ export default async function SamplePage({ searchParams }: { searchParams: Promi
   const { lang: q } = await searchParams;
   const lang: Lang = q === "es" ? "es" : "en";
   const report = await getSampleReport(lang).catch(() => null);
-  const t = REPORT_T[lang];
+  const t = REPORT_T.en;
 
   return (
     <>
@@ -24,19 +24,17 @@ export default async function SamplePage({ searchParams }: { searchParams: Promi
           <div>
             <p className="eyebrow-line"><span aria-hidden="true" />{t.sample}</p>
             <h1>
-              {report ? localPeriod(report.period_label, lang) : "October 2026"}
-              {report?.previous_period && <span className="muted"> {t.vs} {localPeriod(report.previous_period, lang)}</span>}
+              {report ? report.period_label : "October 2026"}
+              {report?.previous_period && <span className="muted"> {t.vs} {report.previous_period}</span>}
             </h1>
             <p className="muted">
-              {lang === "es"
-                ? "Un reporte real de Finny para una clínica de ejemplo, creado con nuestros archivos CSV de muestra. Los números son de ejemplo."
-                : "A real Finny report for an example clinic, created from our sample CSV files. The numbers are example data."}
+              {`A real Finny report for an example clinic, created from our sample CSV files. The numbers are example data.${lang === "es" ? " This version of the report is written in Spanish." : ""}`}
             </p>
           </div>
           <div className="page-actions">
             <div className="seg" role="group" aria-label="Report language">
               <Link href="/sample" aria-current={lang === "en" ? "true" : undefined} className={lang === "en" ? "on" : undefined}>English</Link>
-              <Link href="/sample?lang=es" aria-current={lang === "es" ? "true" : undefined} className={lang === "es" ? "on" : undefined}>Español</Link>
+              <Link href="/sample?lang=es" aria-current={lang === "es" ? "true" : undefined} className={lang === "es" ? "on" : undefined}>Spanish</Link>
             </div>
           </div>
         </div>
@@ -51,8 +49,8 @@ export default async function SamplePage({ searchParams }: { searchParams: Promi
         )}
 
         <div className="final-cta sample-cta">
-          <h2>{lang === "es" ? "Obtén este reporte para tu negocio" : "Get this report for your own business"}</h2>
-          <p>{lang === "es" ? "Tu primer reporte es gratis. Sin tarjeta." : "Your first report is free. No card needed."}</p>
+          <h2>Get this report for your own business</h2>
+          <p>Your first report is free. No card needed.</p>
           <Link className="btn btn-primary btn-lg" href="/signup">Start free — no card <IconArrow /></Link>
         </div>
       </main>

@@ -219,7 +219,7 @@ const FAQ = [
   },
   {
     q: "Which languages are supported?",
-    a: "English and Spanish. Pick the language when you create a report, and switch any saved report between English and Español later.",
+    a: "English and Spanish. Pick the language when you create a report, and switch any saved report between English and Spanish later.",
   },
   {
     q: "What's included in the free plan?",
@@ -295,7 +295,7 @@ export default function Home() {
                 <div className="step-top"><span className="ic-tile"><IconSparkle /></span><span className="step-no">Step 2</span></div>
                 <h3>Read the report</h3>
                 <p>A short report on what moved, why it matters for profit and cash, and the next steps — written for an owner, not an accountant.</p>
-                <span className="step-foot">English or Español</span>
+                <span className="step-foot">English or Spanish</span>
               </li>
               <li className="step-card">
                 <div className="step-top"><span className="ic-tile"><IconListChecks /></span><span className="step-no">Step 3</span></div>
@@ -365,7 +365,7 @@ export default function Home() {
             <div className="feature-grid">
               <div className="f-card"><span className="ic-tile"><IconReport /></span><h3>Plain-English insights</h3><p>Short sentences about your business, not accounting jargon.</p></div>
               <div className="f-card"><span className="ic-tile blue"><IconTrend /></span><h3>Monthly trends</h3><p>See revenue, expenses and profit move from month to month.</p></div>
-              <div className="f-card"><span className="ic-tile amber"><IconGlobe /></span><h3>English &amp; Spanish</h3><p>Every report in English or Español, for you, a partner or your team.</p></div>
+              <div className="f-card"><span className="ic-tile amber"><IconGlobe /></span><h3>English &amp; Spanish</h3><p>Every report in English or Spanish, for you, a partner or your team.</p></div>
               <div className="f-card"><span className="ic-tile violet"><IconTable /></span><h3>Works with your spreadsheets</h3><p>CSV and Excel P&amp;Ls and bank exports — no integrations to set up.</p></div>
               <div className="f-card"><span className="ic-tile"><IconListChecks /></span><h3>Actionable recommendations</h3><p>Next steps you can actually do this month, ranked by priority.</p></div>
               <div className="f-card"><span className="ic-tile rose"><IconShield /></span><h3>Never invents numbers</h3><p>Finny calculates every figure from your file. If something is missing, it says so instead of guessing.</p></div>

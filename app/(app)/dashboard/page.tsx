@@ -78,6 +78,7 @@ export default async function DashboardPage() {
     }
   }
   const content = latest ? (latest.language === settings.language ? latest.content : latest.translations?.[settings.language] ?? latest.content) : null;
+  const contentLang = latest ? (latest.language === settings.language || latest.translations?.[settings.language] ? settings.language : latest.language) : "en";
 
   return (
     <div className="page">
@@ -130,9 +131,9 @@ export default async function DashboardPage() {
           <section className="card latest-card" aria-labelledby="latest-h">
             <p className="label-green">Latest report</p>
             <h2 id="latest-h" className="card-title">{localPeriod(latest.period_label, "en")}{latest.previous_period ? ` vs ${latest.previous_period}` : ""}</h2>
-            <p className="latest-text">{content.monthly_report.headline}</p>
+            <p className="latest-text" lang={contentLang}>{content.monthly_report.headline}</p>
             {content.monthly_report.what_to_do_next[0] && (
-              <p className="latest-next"><strong>Next:</strong> {content.monthly_report.what_to_do_next[0]}</p>
+              <p className="latest-next"><strong>Next:</strong> <span lang={contentLang}>{content.monthly_report.what_to_do_next[0]}</span></p>
             )}
             <div className="row-actions">
               <Link className="text-link" href={`/reports/${latest.id}`}>Read the full report <IconArrow /></Link>
@@ -154,7 +155,7 @@ export default async function DashboardPage() {
           {openItems.length ? (
             <ul className="mini-list">
               {openItems.map((i) => (
-                <li key={i.id}><span className={`prio ${i.priority}`}>{i.priority[0].toUpperCase() + i.priority.slice(1)}</span>{i.task}</li>
+                <li key={i.id}><span className={`prio ${i.priority}`}>{i.priority[0].toUpperCase() + i.priority.slice(1)}</span><span lang={latest?.language}>{i.task}</span></li>
               ))}
             </ul>
           ) : (
@@ -187,7 +188,7 @@ export default async function DashboardPage() {
               <Link href={`/reports/${r.id}`}>
                 <span className="ic-tile sm"><IconReport /></span>
                 <span className="rr-main"><strong>{r.period_label}</strong><span className="muted">{r.previous_period ? `Compared with ${r.previous_period}` : "Single month"}</span></span>
-                <span className="pill">{r.language === "es" ? "Español" : "English"}</span>
+                <span className="pill">{r.language === "es" ? "Spanish" : "English"}</span>
                 <span className={`num rr-profit ${r.net_profit < 0 ? "neg" : ""}`}>${Math.round(r.net_profit).toLocaleString("en-US")} <span className="muted">profit</span></span>
               </Link>
             </li>

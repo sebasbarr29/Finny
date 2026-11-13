@@ -31,7 +31,7 @@ export default async function AskPage({ searchParams }: { searchParams: Promise<
         `Why did my profit change in ${latest}?`,
         "Which expense grew the most?",
         "What were my three biggest costs last month?",
-        "¿Cómo se comparan mis ingresos con el mes anterior?",
+        "How does my revenue compare with the previous month?",
       ]
     : [];
 

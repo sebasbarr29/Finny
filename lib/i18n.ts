@@ -1,5 +1,6 @@
 export type Lang = "en" | "es";
 
+// Interface labels are always English. Only AI-written report text can be Spanish.
 export const REPORT_T = {
   en: {
     monthly: "Monthly Report", tips: "Business Tips", plan: "Action Plan",
@@ -12,18 +13,6 @@ export const REPORT_T = {
     numbersNote: "Every number was calculated by Finny directly from the uploaded file. The AI wrote the explanations using only those numbers.",
     disclaimer: "Finny gives general business guidance, not tax, legal, or investment advice. For those, talk to a qualified professional.",
     up: "up", down: "down", same: "no change",
-  },
-  es: {
-    monthly: "Reporte mensual", tips: "Consejos para tu negocio", plan: "Plan de acción",
-    revenue: "Ingresos", expenses: "Gastos", profit: "Utilidad neta", margin: "Margen de utilidad",
-    vs: "vs.", vsShort: "vs", changed: "Qué cambió", matters: "Por qué importa", next: "Qué hacer ahora",
-    summary: "Resumen", topExp: "En qué se fue el dinero", ofExp: "de los gastos", movers: "Mayores cambios en costos",
-    category: "Categoría", before: "Antes", after: "Ahora", change: "Cambio",
-    profitA: "Utilidad", cash: "Flujo de caja", costs: "Costos", growth: "Crecimiento",
-    from: "Archivos", sample: "Reporte de muestra", noPrev: "Un solo mes — sube el mes anterior para ver los cambios.",
-    numbersNote: "Finny calculó cada número directamente del archivo. La IA escribió las explicaciones usando solo esos números.",
-    disclaimer: "Finny ofrece orientación general para negocios, no asesoría fiscal, legal ni de inversiones. Para eso, consulta a un profesional calificado.",
-    up: "subió", down: "bajó", same: "sin cambio",
   },
 } as const;
 

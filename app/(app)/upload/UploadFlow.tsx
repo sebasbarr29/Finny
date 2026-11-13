@@ -182,7 +182,7 @@ export default function UploadFlow({ locked, defaultLanguage }: { locked: boolea
               <span>Report language</span>
               <select id="language" value={language} onChange={(e) => setLanguage(e.target.value as "en" | "es")}>
                 <option value="en">English</option>
-                <option value="es">Español</option>
+                <option value="es">Spanish</option>
               </select>
             </label>
             <button className="btn btn-primary" type="submit" disabled={busy}>
@@ -240,7 +240,7 @@ export default function UploadFlow({ locked, defaultLanguage }: { locked: boolea
                   <span>Report language</span>
                   <select value={language} onChange={(e) => setLanguage(e.target.value as "en" | "es")}>
                     <option value="en">English</option>
-                    <option value="es">Español</option>
+                    <option value="es">Spanish</option>
                   </select>
                 </label>
               </div>
