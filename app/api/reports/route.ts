@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { AiError, buildFacts, MODEL, writeReports, type Language } from "@/lib/ai";
 import { getCurrentUser } from "@/lib/auth";
+import { getPlan, PRICE_LABEL } from "@/lib/billing";
 import { compare, CsvError, MAX_FILE_BYTES, parseStatement, type Comparison } from "@/lib/finance";
 import { reportsCreatedToday, saveReport } from "@/lib/reports";
 
@@ -39,6 +40,14 @@ export async function POST(req: Request) {
     const current = await readCsv(form.get("current"), "this-month");
     const previous = await readCsv(form.get("previous"), "previous-month");
     if (!current) return fail(400, "Choose a CSV file for this month.");
+
+    const plan = await getPlan(user.id);
+    if (!plan.canCreateReport) {
+      return NextResponse.json(
+        { error: `You've used your free report. Subscribe for ${PRICE_LABEL} to create more reports.`, needsSubscription: true },
+        { status: 402 },
+      );
+    }
 
     if ((await reportsCreatedToday(user.id)) >= DAILY_LIMIT) {
       return fail(429, `You've created ${DAILY_LIMIT} reports in the last 24 hours. Try again tomorrow.`);

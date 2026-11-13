@@ -2,12 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { startCheckout } from "@/app/billing/actions";
 
 const STEPS = ["Reading your file…", "Calculating your numbers…", "Writing your Monthly Report…", "Writing your Business Tips Report…", "Almost done…"];
 
-export default function UploadForm() {
+export default function UploadForm({ locked }: { locked: boolean }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [needsSub, setNeedsSub] = useState(locked);
   const [busy, setBusy] = useState(false);
   const [step, setStep] = useState(0);
 
@@ -33,6 +35,7 @@ export default function UploadForm() {
       const data = await res.json().catch(() => ({}));
       if (res.status === 401) { router.push("/login"); return; }
       if (!res.ok || !data.id) {
+        if (data.needsSubscription) { setNeedsSub(true); setBusy(false); return; }
         setError(data.error ?? "Something went wrong while creating your report. Please try again.");
         setBusy(false);
         return;
@@ -42,6 +45,19 @@ export default function UploadForm() {
       setError("Couldn't reach Finny. Check your connection and try again.");
       setBusy(false);
     }
+  }
+
+  if (needsSub) {
+    return (
+      <div className="paywall">
+        {error && <p className="form-error" role="alert">{error}</p>}
+        <p><strong>You&apos;ve used your free report.</strong></p>
+        <p className="muted">Subscribe for $29/month to upload new months and keep all your reports in one place. Cancel anytime.</p>
+        <form action={startCheckout}>
+          <button className="btn btn-primary" type="submit">Subscribe for $29/month</button>
+        </form>
+      </div>
+    );
   }
 
   return (

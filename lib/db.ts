@@ -69,6 +69,12 @@ const SCHEMA: string[] = [
      created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
    )`,
   `CREATE INDEX IF NOT EXISTS reports_user_created_idx ON reports(user_id, created_at DESC)`,
+  // Billing (Stripe). Kept on users: one plan per account.
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT UNIQUE`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS stripe_subscription_id TEXT`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_status TEXT`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS current_period_end TIMESTAMPTZ`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS cancel_at_period_end BOOLEAN NOT NULL DEFAULT FALSE`,
 ];
 
 async function migrate(): Promise<void> {

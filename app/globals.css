@@ -416,3 +416,18 @@ footer .wrap { padding-block: 40px; display: flex; flex-wrap: wrap; justify-cont
 .tip-area li { display: flex; flex-direction: column; gap: 2px; }
 .tip-area li strong { color: var(--ink); }
 .note { font-size: 0.85rem; color: var(--ink-2); background: var(--brand-soft); border-radius: 12px; padding: 12px 14px; }
+
+/* ---------- Billing ---------- */
+.side-stack { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.plan-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.plan-badge { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.plan-badge.paid { background: var(--brand-soft); color: var(--brand); }
+.plan-badge.free { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line-2); }
+.plan-badge.demo { background: var(--sky-soft); color: var(--sky); }
+.meter { height: 8px; border-radius: 99px; background: var(--bg-2); overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--brand); border-radius: inherit; }
+.paywall { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; border: 1px dashed var(--line-2); border-radius: 14px; padding: 18px; }
+.success-card { align-items: flex-start; max-width: 640px; }
+.success-card h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 800; }
+.ic.big { width: 48px; height: 48px; border-radius: 14px; }
+.ic.big svg { width: 24px; height: 24px; }
