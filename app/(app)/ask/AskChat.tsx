@@ -6,6 +6,13 @@ import { IconSend, IconSparkle } from "@/app/components/icons";
 
 type Msg = { id: string; role: "user" | "assistant"; content: string };
 
+/** Shows **bold** as bold and strips other Markdown marks. Renders text only (no HTML injection). */
+function Answer({ text }: { text: string }) {
+  const clean = text.replace(/^#{1,6}\s+/gm, "").replace(/(^|\s)\*(?!\*)([^*\n]+)\*(?=\s|[.,;:!?]|$)/g, "$1$2");
+  const parts = clean.split(/(\*\*[^*]+\*\*)/g);
+  return <>{parts.map((p, i) => (p.startsWith("**") && p.endsWith("**") ? <strong key={i}>{p.slice(2, -2)}</strong> : <span key={i}>{p}</span>))}</>;
+}
+
 export default function AskChat({
   initial,
   suggestions,
@@ -88,7 +95,7 @@ export default function AskChat({
             ) : (
               <div key={m.id} className="bubble-row">
                 <span className="avatar-sm f" aria-hidden="true">F</span>
-                <p className="bubble-ai">{m.content}</p>
+                <p className="bubble-ai"><Answer text={m.content} /></p>
               </div>
             ),
           )}

@@ -2,7 +2,14 @@
 
 Your AI finance buddy for small businesses. Built by Sebastián Barrantes.
 
-Finny turns a monthly P&L or bank CSV into a plain-language Monthly Report and a Business Tips Report, in English or Spanish.
+Finny turns a monthly P&L or bank export (CSV or Excel) into a plain-language Monthly Report, a Business Tips Report and a prioritized action plan, in English or Spanish. Owners can ask follow-up questions (Ask Finny) answered only from their saved, calculated numbers.
+
+## How it works
+
+- **Math in code, words from AI.** `lib/finance.ts` calculates revenue, expenses, net profit, margin, top expenses and month-over-month changes. Claude (`lib/ai.ts`) only writes explanations, and a guard rejects any dollar amount or percentage that isn't in the calculated data.
+- **App screens** (`app/(app)/`): Dashboard, Upload (review numbers before generating), Reports (EN/ES switch, print), Business Tips, Action Plan (ticks saved in Neon), Ask Finny, Billing (Stripe), Settings.
+- **Plans:** Free = 1 report + 5 Ask Finny questions. Pro ($29/month, Stripe) = unlimited. The demo account (`demo@demo.com`) has full access for grading and is labeled as not a subscription.
+- **Data:** Neon Postgres. Tables are created automatically on first request. Every query is scoped to the logged-in user.
 
 ## Tech
 
