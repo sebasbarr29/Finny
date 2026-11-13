@@ -77,8 +77,9 @@ export default async function DashboardPage() {
       };
     }
   }
-  const content = latest ? (latest.language === settings.language ? latest.content : latest.translations?.[settings.language] ?? latest.content) : null;
-  const contentLang = latest ? (latest.language === settings.language || latest.translations?.[settings.language] ? settings.language : latest.language) : "en";
+  // Dashboard text is English whenever an English version of the report exists.
+  const content = latest ? (latest.language === "en" ? latest.content : latest.translations?.en ?? latest.content) : null;
+  const contentLang = latest ? (latest.language === "en" || latest.translations?.en ? "en" : latest.language) : "en";
 
   return (
     <div className="page">

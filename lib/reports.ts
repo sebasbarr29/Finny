@@ -26,6 +26,7 @@ export type ReportSummary = Pick<ReportRow, "id" | "language" | "period_label" |
   net_profit: number;
   margin: number | null;
   headline: string | null;
+  headline_lang: Language;
 };
 
 const ID_RE = /^\d{1,18}$/;
@@ -77,15 +78,26 @@ export async function listReports(userId: string): Promise<ReportSummary[]> {
             (metrics->>'expenses')::float AS expenses,
             (metrics->>'netProfit')::float AS net_profit,
             (metrics->>'marginPct')::float AS margin,
-            content->'monthly_report'->>'headline' AS headline
+            COALESCE(translations->'en'->'monthly_report'->>'headline', content->'monthly_report'->>'headline') AS headline,
+            CASE WHEN language = 'en' OR translations ? 'en' THEN 'en' ELSE language END AS headline_lang
        FROM reports WHERE user_id = $1 ORDER BY created_at DESC, id DESC LIMIT 200`,
     [userId],
   );
 }
 
-/** The most recent month the user has data for (by month, then by upload time). */
+/**
+ * The most recent month the user has data for. When a month has several reports, prefer
+ * English (the app's language), then two-month comparisons, then the newest upload.
+ * Spanish reports still open in Spanish when the user picks them.
+ */
 export function latestByMonth(list: ReportSummary[]): ReportSummary | null {
-  return [...list].sort((a, b) => periodKey(b.period_label) - periodKey(a.period_label) || +new Date(b.created_at) - +new Date(a.created_at))[0] ?? null;
+  return [...list].sort(
+    (a, b) =>
+      periodKey(b.period_label) - periodKey(a.period_label) ||
+      Number(b.language === "en") - Number(a.language === "en") ||
+      Number(!!b.previous_period) - Number(!!a.previous_period) ||
+      +new Date(b.created_at) - +new Date(a.created_at),
+  )[0] ?? null;
 }
 
 export type MonthPoint = { period: string; revenue: number; expenses: number; netProfit: number; reportId: string };

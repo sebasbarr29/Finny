@@ -45,7 +45,7 @@ export default async function ReportsPage() {
                     <span className="pill">{r.language === "es" ? "Spanish" : "English"}</span>
                   </span>
                 </div>
-                {r.headline && <p className="rc-summary" lang={r.language}>{r.headline}</p>}
+                {r.headline && <p className="rc-summary" lang={r.headline_lang}>{r.headline}</p>}
                 <dl className="rc-nums">
                   <div><dt>Revenue</dt><dd className="num">{money(r.revenue)}</dd></div>
                   <div><dt>Expenses</dt><dd className="num">{money(r.expenses)}</dd></div>
