@@ -58,3 +58,23 @@ export async function reportsCreatedToday(userId: string): Promise<number> {
   );
   return rows[0].n;
 }
+
+export type SampleReport = Pick<ReportRow, "period_label" | "previous_period" | "metrics" | "comparison" | "content">;
+
+/**
+ * Public sample: the demo account's earliest two-month report (made from the sample clinic CSVs),
+ * in the requested language when one exists. Uses the earliest so later demo uploads don't change it.
+ */
+export async function getSampleReport(lang: Language): Promise<SampleReport | null> {
+  const rows = await sql<ReportRow & { translations: Record<string, AiReport> }>(
+    `SELECT r.id::text AS id, r.language, r.period_label, r.previous_period, r.metrics, r.comparison, r.content, r.translations
+       FROM reports r JOIN users u ON u.id = r.user_id
+      WHERE u.is_demo AND r.previous_period IS NOT NULL
+      ORDER BY r.id ASC LIMIT 20`,
+  );
+  const exact = rows.find((r) => r.language === lang);
+  if (exact) return exact;
+  const translated = rows.find((r) => r.translations?.[lang]);
+  if (translated) return { ...translated, content: translated.translations[lang] };
+  return rows[0] ?? null;
+}

@@ -75,6 +75,8 @@ const SCHEMA: string[] = [
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_status TEXT`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS current_period_end TIMESTAMPTZ`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS cancel_at_period_end BOOLEAN NOT NULL DEFAULT FALSE`,
+  // Report written in the other language, keyed by language code ("en" / "es").
+  `ALTER TABLE reports ADD COLUMN IF NOT EXISTS translations JSONB NOT NULL DEFAULT '{}'::jsonb`,
 ];
 
 async function migrate(): Promise<void> {
