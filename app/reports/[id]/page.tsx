@@ -33,6 +33,14 @@ const T = {
   },
 };
 
+const MONTHS_ES: Record<string, string> = {
+  January: "Enero", February: "Febrero", March: "Marzo", April: "Abril", May: "Mayo", June: "Junio",
+  July: "Julio", August: "Agosto", September: "Septiembre", October: "Octubre", November: "Noviembre", December: "Diciembre",
+  "This month": "Este mes", "Previous month": "Mes anterior",
+};
+const localPeriod = (label: string, lang: "en" | "es") =>
+  lang === "es" ? label.replace(/^(January|February|March|April|May|June|July|August|September|October|November|December|This month|Previous month)/, (m) => MONTHS_ES[m]) : label;
+
 function Delta({ c, invert = false }: { c?: Change; invert?: boolean }) {
   if (!c) return null;
   const good = invert ? c.abs < 0 : c.abs > 0;
@@ -62,7 +70,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
         <header className="report-head">
           <div>
             <p className="eyebrow">{report.is_sample ? t.sample : t.monthly}</p>
-            <h1>{m.period}{report.previous_period && <span className="muted"> {t.vs} {report.previous_period}</span>}</h1>
+            <h1>{localPeriod(m.period, report.language)}{report.previous_period && <span className="muted"> {t.vs} {localPeriod(report.previous_period, report.language)}</span>}</h1>
             <p className="muted small">{t.from}: {report.source_files.join(", ")}</p>
           </div>
           <span className="pill">{report.language === "es" ? "Español" : "English"}</span>

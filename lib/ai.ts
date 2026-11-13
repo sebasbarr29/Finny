@@ -128,6 +128,7 @@ You write two reports from monthly numbers that Finny's code has already calcula
 Rules for numbers:
 - Use ONLY the figures in the provided data, written exactly as they appear (for example "$42,180", "14.8%", "+6.2%", "-3.8 pts").
 - Never calculate, estimate, round, convert, or invent any new figure, target, benchmark, or industry average. If a useful number isn't in the data, describe it in words instead.
+- You may drop a leading "+" or "-" sign when the sentence already says the number went up or down (write "rose 6.2%", not "rose +6.2%").
 - Keep the same number formatting in Spanish (do not switch to commas for decimals or move the $ sign).
 - If there is no previous month, don't describe changes over time; describe the current month only.
 
