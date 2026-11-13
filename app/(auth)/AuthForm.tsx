@@ -15,7 +15,7 @@ export default function AuthForm({ mode, notice }: { mode: "login" | "signup"; n
 
       {isSignup && (
         <label className="field">
-          <span>Business or your name <em>(optional)</em></span>
+          <span>Business name <em>(optional)</em></span>
           <input id="name" name="name" type="text" autoComplete="organization" defaultValue={state.name} maxLength={100} />
         </label>
       )}

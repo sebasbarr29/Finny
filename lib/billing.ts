@@ -3,6 +3,8 @@ import Stripe from "stripe";
 import { sql } from "./db";
 
 export const FREE_REPORTS = 1;
+export const FREE_QUESTIONS = 5;
+export const DAILY_QUESTIONS = 50;
 export const PRICE_LABEL = "$29/month";
 
 let stripe: Stripe | null = null;
@@ -23,6 +25,11 @@ export type Plan = {
   canCreateReport: boolean;
   currentPeriodEnd: Date | null;
   cancelAtPeriodEnd: boolean;
+  hasCustomer: boolean;
+  questionsUsed: number;
+  questionsToday: number;
+  freeQuestionsLeft: number;
+  canAsk: boolean;
 };
 
 const PAID_STATUSES = new Set(["active", "trialing"]);
@@ -33,10 +40,16 @@ export async function getPlan(userId: string): Promise<Plan> {
     subscription_status: string | null;
     current_period_end: Date | null;
     cancel_at_period_end: boolean;
+    stripe_customer_id: string | null;
     used: number;
+    q_total: number;
+    q_today: number;
   }>(
-    `SELECT u.is_demo, u.subscription_status, u.current_period_end, u.cancel_at_period_end,
-            (SELECT count(*)::int FROM reports r WHERE r.user_id = u.id AND NOT r.is_sample) AS used
+    `SELECT u.is_demo, u.subscription_status, u.current_period_end, u.cancel_at_period_end, u.stripe_customer_id,
+            (SELECT count(*)::int FROM reports r WHERE r.user_id = u.id AND NOT r.is_sample) AS used,
+            (SELECT count(*)::int FROM chat_messages c WHERE c.user_id = u.id AND c.role = 'user') AS q_total,
+            (SELECT count(*)::int FROM chat_messages c WHERE c.user_id = u.id AND c.role = 'user'
+                AND c.created_at > now() - interval '24 hours') AS q_today
        FROM users u WHERE u.id = $1`,
     [userId],
   );
@@ -44,6 +57,9 @@ export async function getPlan(userId: string): Promise<Plan> {
   const paid = !!u && PAID_STATUSES.has(u.subscription_status ?? "");
   const kind: Plan["kind"] = paid ? "paid" : u?.is_demo ? "demo" : "free";
   const freeUsed = Math.min(u?.used ?? 0, FREE_REPORTS);
+  const qTotal = u?.q_total ?? 0;
+  const qToday = u?.q_today ?? 0;
+  const freeQuestionsLeft = Math.max(0, FREE_QUESTIONS - qTotal);
   return {
     kind,
     status: u?.subscription_status ?? null,
@@ -53,6 +69,11 @@ export async function getPlan(userId: string): Promise<Plan> {
     canCreateReport: kind !== "free" || (u?.used ?? 0) < FREE_REPORTS,
     currentPeriodEnd: u?.current_period_end ?? null,
     cancelAtPeriodEnd: u?.cancel_at_period_end ?? false,
+    hasCustomer: !!u?.stripe_customer_id,
+    questionsUsed: qTotal,
+    questionsToday: qToday,
+    freeQuestionsLeft,
+    canAsk: kind === "free" ? freeQuestionsLeft > 0 : qToday < DAILY_QUESTIONS,
   };
 }
 

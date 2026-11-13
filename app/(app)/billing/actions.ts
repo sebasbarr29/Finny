@@ -9,7 +9,7 @@ import { sql } from "@/lib/db";
 export async function startCheckout(): Promise<void> {
   const user = await requireUser();
   const plan = await getPlan(user.id);
-  if (plan.kind === "paid") redirect("/dashboard?billing=already");
+  if (plan.kind === "paid") redirect("/billing?billing=already");
 
   const priceId = process.env.STRIPE_PRICE_ID;
   let url: string | null = null;
@@ -35,14 +35,33 @@ export async function startCheckout(): Promise<void> {
       subscription_data: { metadata: { userId: user.id } },
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${base}/billing/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${base}/dashboard?billing=canceled`,
+      cancel_url: `${base}/billing?billing=canceled`,
       allow_promotion_codes: false,
     });
     url = session.url;
   } catch (err) {
     console.error("Checkout failed", err);
-    redirect("/dashboard?billing=error");
+    redirect("/billing?billing=error");
   }
-  if (!url) redirect("/dashboard?billing=error");
+  if (!url) redirect("/billing?billing=error");
+  redirect(url);
+}
+
+/** Opens Stripe's customer portal so subscribers can update their card or cancel. */
+export async function openBillingPortal(): Promise<void> {
+  const user = await requireUser();
+  const rows = await sql<{ stripe_customer_id: string | null }>("SELECT stripe_customer_id FROM users WHERE id = $1", [user.id]);
+  const customerId = rows[0]?.stripe_customer_id;
+  if (!customerId) redirect("/billing?billing=no-customer");
+  let url: string | null = null;
+  try {
+    const base = siteUrl(await headers());
+    const session = await getStripe().billingPortal.sessions.create({ customer: customerId, return_url: `${base}/billing` });
+    url = session.url;
+  } catch (err) {
+    console.error("Billing portal failed", err);
+    redirect("/billing?billing=portal-error");
+  }
+  if (!url) redirect("/billing?billing=portal-error");
   redirect(url);
 }

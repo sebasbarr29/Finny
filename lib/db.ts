@@ -77,6 +77,36 @@ const SCHEMA: string[] = [
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS cancel_at_period_end BOOLEAN NOT NULL DEFAULT FALSE`,
   // Report written in the other language, keyed by language code ("en" / "es").
   `ALTER TABLE reports ADD COLUMN IF NOT EXISTS translations JSONB NOT NULL DEFAULT '{}'::jsonb`,
+  // Settings
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS business_name TEXT`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS business_type TEXT`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_language TEXT NOT NULL DEFAULT 'en'`,
+  `UPDATE users SET business_name = name WHERE business_name IS NULL AND name IS NOT NULL`,
+  `UPDATE users SET business_type = 'clinic' WHERE is_demo AND business_type IS NULL`,
+  // Action plan checklist (one set of items per report)
+  `CREATE TABLE IF NOT EXISTS action_items (
+     id          BIGSERIAL PRIMARY KEY,
+     user_id     BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+     report_id   BIGINT NOT NULL REFERENCES reports(id) ON DELETE CASCADE,
+     position    INT NOT NULL,
+     task        TEXT NOT NULL,
+     category    TEXT NOT NULL CHECK (category IN ('profit', 'cash_flow', 'costs', 'growth')),
+     priority    TEXT NOT NULL CHECK (priority IN ('high', 'medium', 'low')),
+     done        BOOLEAN NOT NULL DEFAULT FALSE,
+     done_at     TIMESTAMPTZ,
+     created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+     UNIQUE (report_id, position)
+   )`,
+  `CREATE INDEX IF NOT EXISTS action_items_user_idx ON action_items(user_id, report_id)`,
+  // Ask Finny conversation
+  `CREATE TABLE IF NOT EXISTS chat_messages (
+     id          BIGSERIAL PRIMARY KEY,
+     user_id     BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+     role        TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
+     content     TEXT NOT NULL,
+     created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+   )`,
+  `CREATE INDEX IF NOT EXISTS chat_messages_user_idx ON chat_messages(user_id, created_at)`,
 ];
 
 async function migrate(): Promise<void> {

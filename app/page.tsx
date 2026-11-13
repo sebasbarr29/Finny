@@ -402,7 +402,7 @@ export default function Home() {
                   <li><IconCheck />Unlimited monthly reports</li>
                   <li><IconCheck />Unlimited Ask Finny questions</li>
                   <li><IconCheck />Trends across all your months</li>
-                  <li><IconCheck />Switch any report between English and Español</li>
+                  <li><IconCheck />Every month saved, with trends and action plans</li>
                   <li><IconCheck />Cancel anytime</li>
                 </ul>
                 <Link className="btn btn-primary btn-block" href="/signup?plan=pro">Get Pro</Link>

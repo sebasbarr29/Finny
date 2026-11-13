@@ -1,27 +1,20 @@
 import { NextResponse } from "next/server";
+import { ensureActionItems } from "@/lib/actions";
 import { AiError, buildFacts, MODEL, writeReports, type Language } from "@/lib/ai";
 import { getCurrentUser } from "@/lib/auth";
 import { getPlan, PRICE_LABEL } from "@/lib/billing";
-import { compare, CsvError, MAX_FILE_BYTES, parseStatement, type Comparison } from "@/lib/finance";
+import { compare, CsvError, type Comparison } from "@/lib/finance";
 import { reportsCreatedToday, saveReport } from "@/lib/reports";
+import { aiContext, getSettings } from "@/lib/settings";
+import { parseWithPeriod, periodFromInput, readUpload } from "@/lib/upload";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 300; // Claude can take up to a minute or two to write both reports
+export const maxDuration = 300; // Claude can take up to a minute or two to write the reports
 
 const DAILY_LIMIT = 20;
 
 const fail = (status: number, error: string) => NextResponse.json({ error }, { status });
-
-async function readCsv(value: FormDataEntryValue | null, label: string): Promise<{ name: string; text: string } | null> {
-  if (!value || typeof value === "string" || value.size === 0) return null;
-  const name = value.name || `${label}.csv`;
-  if (!/\.(csv|txt)$/i.test(name) && !/csv|text\/plain/.test(value.type)) {
-    throw new CsvError(`"${name}" isn't a CSV file. In Excel or Google Sheets, use File → Download/Save as → CSV.`);
-  }
-  if (value.size > MAX_FILE_BYTES) throw new CsvError(`"${name}" is larger than 2 MB. Upload one month at a time.`);
-  return { name, text: await value.text() };
-}
 
 export async function POST(req: Request) {
   const user = await getCurrentUser();
@@ -34,12 +27,14 @@ export async function POST(req: Request) {
     return fail(400, "The upload didn't come through. Please try again.");
   }
 
-  const language: Language = form.get("language") === "es" ? "es" : "en";
+  const settings = await getSettings(user.id);
+  const langInput = form.get("language");
+  const language: Language = langInput === "es" ? "es" : langInput === "en" ? "en" : settings.language;
 
   try {
-    const current = await readCsv(form.get("current"), "this-month");
-    const previous = await readCsv(form.get("previous"), "previous-month");
-    if (!current) return fail(400, "Choose a CSV file for this month.");
+    const current = await readUpload(form.get("current"), "this-month");
+    const previous = await readUpload(form.get("previous"), "previous-month");
+    if (!current) return fail(400, "Choose a file for this month.");
 
     const plan = await getPlan(user.id);
     if (!plan.canCreateReport) {
@@ -48,23 +43,22 @@ export async function POST(req: Request) {
         { status: 402 },
       );
     }
-
     if ((await reportsCreatedToday(user.id)) >= DAILY_LIMIT) {
       return fail(429, `You've created ${DAILY_LIMIT} reports in the last 24 hours. Try again tomorrow.`);
     }
 
-    const cur = parseStatement(current.text, current.name, "This month");
+    const cur = parseWithPeriod(current, "This month", periodFromInput(form.get("current_period")));
     let comparison: Comparison | null = null;
     if (previous) {
-      const prev = parseStatement(previous.text, previous.name, "Previous month");
+      const prev = parseWithPeriod(previous, "Previous month", periodFromInput(form.get("previous_period")));
       if (prev.period === cur.period && cur.period !== "This month") {
-        return fail(400, `Both files look like ${cur.period}. Upload two different months to compare them.`);
+        return fail(400, `Both files are set to ${cur.period}. Pick two different months to compare them.`);
       }
       comparison = compare(cur, prev);
     }
 
     const facts = buildFacts(cur, comparison);
-    const content = await writeReports(facts, language);
+    const content = await writeReports(facts, language, aiContext(settings));
 
     const id = await saveReport(user.id, {
       language,
@@ -76,6 +70,7 @@ export async function POST(req: Request) {
       content,
       model: MODEL,
     });
+    await ensureActionItems(user.id, id, content);
     return NextResponse.json({ id });
   } catch (err) {
     if (err instanceof CsvError) return fail(400, err.message);

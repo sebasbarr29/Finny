@@ -23,7 +23,7 @@ export async function signup(_prev: FormState, form: FormData): Promise<FormStat
 
   const hash = await hashPassword(password);
   const rows = await sql<{ id: string }>(
-    `INSERT INTO users (email, name, password_hash) VALUES ($1, $2, $3)
+    `INSERT INTO users (email, name, business_name, password_hash) VALUES ($1, $2, $2, $3)
      ON CONFLICT (email) DO NOTHING RETURNING id::text AS id`,
     [email, name || null, hash],
   );
