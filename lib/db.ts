@@ -1,4 +1,5 @@
-import { Pool, type QueryResultRow } from "pg";
+import { Pool, type PoolClient, type QueryResultRow } from "pg";
+import demoReports from "./demo-reports.json";
 
 // One connection pool per server instance. On Vercel, the Neon integration
 // provides DATABASE_URL (or POSTGRES_URL); locally it comes from .env.local.
@@ -54,7 +55,54 @@ const SCHEMA: string[] = [
      created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
    )`,
   `CREATE INDEX IF NOT EXISTS sessions_user_id_idx ON sessions(user_id)`,
+  `CREATE TABLE IF NOT EXISTS reports (
+     id               BIGSERIAL PRIMARY KEY,
+     user_id          BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+     language         TEXT NOT NULL CHECK (language IN ('en', 'es')),
+     period_label     TEXT NOT NULL,
+     previous_period  TEXT,
+     source_files     TEXT[] NOT NULL DEFAULT '{}',
+     metrics          JSONB NOT NULL,
+     comparison       JSONB,
+     content          JSONB NOT NULL,
+     model            TEXT NOT NULL,
+     is_sample        BOOLEAN NOT NULL DEFAULT FALSE,
+     created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+   )`,
+  `CREATE INDEX IF NOT EXISTS reports_user_created_idx ON reports(user_id, created_at DESC)`,
 ];
+
+type DemoReport = {
+  language: "en" | "es";
+  period_label: string;
+  previous_period: string | null;
+  source_files: string[];
+  metrics: unknown;
+  comparison: unknown;
+  content: unknown;
+  model: string;
+};
+
+// Pre-generated sample reports (real Claude output from the sample CSVs) so a grader
+// sees a finished report as soon as they log in to the demo account.
+async function seedDemoReports(client: PoolClient): Promise<void> {
+  const reports = demoReports as DemoReport[];
+  if (!reports.length) return;
+  const { rows } = await client.query<{ id: string; has_reports: boolean }>(
+    `SELECT u.id::text AS id, EXISTS (SELECT 1 FROM reports r WHERE r.user_id = u.id) AS has_reports
+       FROM users u WHERE u.email = $1`,
+    [DEMO_EMAIL],
+  );
+  if (!rows[0] || rows[0].has_reports) return;
+  for (const r of reports) {
+    await client.query(
+      `INSERT INTO reports (user_id, language, period_label, previous_period, source_files, metrics, comparison, content, model, is_sample)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, TRUE)`,
+      [rows[0].id, r.language, r.period_label, r.previous_period, r.source_files,
+       JSON.stringify(r.metrics), r.comparison ? JSON.stringify(r.comparison) : null, JSON.stringify(r.content), r.model],
+    );
+  }
+}
 
 async function migrate(): Promise<void> {
   const client = await pool().connect();
@@ -69,6 +117,7 @@ async function migrate(): Promise<void> {
        ON CONFLICT (email) DO NOTHING`,
       [DEMO_EMAIL, DEMO_NAME, DEMO_PASSWORD_HASH],
     );
+    await seedDemoReports(client);
     await client.query("DELETE FROM sessions WHERE expires_at < now()");
     await client.query("COMMIT");
   } catch (err) {

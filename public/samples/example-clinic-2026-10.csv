@@ -1,0 +1,13 @@
+Month,Category,Type,Amount
+2026-10,Patient visits,Revenue,30180.00
+2026-10,Insurance reimbursements,Revenue,10400.00
+2026-10,Lab services,Revenue,1600.00
+2026-10,Payroll,Expense,19100.00
+2026-10,Rent,Expense,4200.00
+2026-10,Medical supplies,Expense,7000.00
+2026-10,Equipment lease,Expense,1400.00
+2026-10,Malpractice insurance,Expense,1200.00
+2026-10,Utilities,Expense,980.00
+2026-10,Marketing,Expense,1100.00
+2026-10,Software subscriptions,Expense,600.00
+2026-10,Other,Expense,360.00
