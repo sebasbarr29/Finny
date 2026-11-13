@@ -123,7 +123,7 @@ export default function SampleReport() {
                 </g>
                 <path d={`M${pts(rev).replace(/ /g, " L")} L520,170 L0,170 Z`} fill="url(#rev-fill)" />
                 <polyline points={pts(rev)} fill="none" stroke="var(--brand)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
-                <polyline points={pts(exp)} fill="none" stroke="var(--sky)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                <polyline points={pts(exp)} fill="none" stroke="var(--sky)" strokeWidth="2.5" strokeDasharray="7 6" strokeLinejoin="round" strokeLinecap="round" />
                 <circle cx="520" cy="36.9" r="4.5" fill="var(--surface)" stroke="var(--brand)" strokeWidth="2.5" />
                 <circle cx="520" cy="74.4" r="4.5" fill="var(--surface)" stroke="var(--sky)" strokeWidth="2.5" />
               </svg>

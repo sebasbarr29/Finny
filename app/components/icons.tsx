@@ -67,18 +67,20 @@ export const IconShield = (p: P) => (
   <svg {...base} {...p}><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" /><path d="M9 12l2 2 4-4" /></svg>
 );
 
+/** Finny mark: a friendly fish with a green-to-blue body on a soft green tile. */
 export function LogoMark({ className = "logo-mark" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 32 32" aria-hidden="true">
       <defs>
-        <linearGradient id="finny-g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#14b88a" />
-          <stop offset="1" stopColor="#3b82f6" />
+        <linearGradient id="finny-fish" x1="0" y1="0.2" x2="1" y2="0.8">
+          <stop offset="0" stopColor="#338063" />
+          <stop offset="1" stopColor="#397FA3" />
         </linearGradient>
       </defs>
-      <rect width="32" height="32" rx="9" fill="url(#finny-g)" />
-      <path d="M7 17.5c3.2-5.4 9.6-7 15-3.8l4-3.2v11l-4-3.2c-5.4 3.2-11.8 1.6-15-.8z" fill="#fff" />
-      <circle cx="12" cy="16.4" r="1.3" fill="#0f9d74" />
+      <rect x="0.5" y="0.5" width="31" height="31" rx="9" fill="#E7F1EC" stroke="#D3E4DA" />
+      <path d="M6.5 16.6c3-4.9 8.9-6.5 14-3.6l4.4-3.5v12.2l-4.4-3.5c-5.1 2.9-11 1.3-14-1.6z" fill="url(#finny-fish)" />
+      <circle cx="11.4" cy="16.1" r="1.25" fill="#FFFFFF" />
+      <path d="M15.6 13.3c.9 1.6.9 3.6 0 5.2" stroke="#FFFFFF" strokeOpacity="0.55" strokeWidth="1.1" fill="none" strokeLinecap="round" />
     </svg>
   );
 }

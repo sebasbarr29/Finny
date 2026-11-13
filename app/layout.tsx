@@ -1,17 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const sans = Plus_Jakarta_Sans({
+// Headings: confident geometric sans. Body: highly readable sans. Mono: small labels only.
+const heading = Plus_Jakarta_Sans({
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-sans",
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
+const body = Inter({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-body",
   display: "swap",
 });
 
 const mono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: ["500"],
   variable: "--font-mono",
   display: "swap",
 });
@@ -26,12 +33,12 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#070b14",
+  themeColor: "#FAF8F3",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={`${heading.variable} ${body.variable} ${mono.variable}`}>
       <body>{children}</body>
     </html>
   );

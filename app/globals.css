@@ -1,33 +1,43 @@
-/* Finny — dark-first SaaS theme. Every color is a token here. */
+/* Finny — warm light theme. Every color is a token here.
+   Layout idea: cream paper page, white cards with hairline warm borders, pill buttons, generous space. */
 :root {
-  --bg: #070b14;
-  --bg-2: #0c1220;
-  --surface: #0f1726;
-  --surface-2: #131d30;
-  --ink: #eef2f8;
-  --ink-2: #cdd5e3;
-  --muted: #93a0b8;
-  --line: #1d2738;
-  --line-2: #2a3650;
-  --brand: #22c793;
-  --brand-2: #34d9a5;
-  --brand-soft: #0e2b25;
-  --brand-ink: #04140f;
-  --sky: #60a5fa;
-  --sky-soft: #10203a;
-  --amber: #fbbf24;
-  --amber-soft: #2a2110;
-  --rose: #f87171;
-  --rose-soft: #2c1417;
-  --glow-1: rgb(34 199 147 / 18%);
-  --glow-2: rgb(96 165 250 / 14%);
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
-  --shadow-lg: 0 1px 2px rgb(0 0 0 / 40%), 0 30px 70px -24px rgb(0 0 0 / 70%);
-  --font: var(--font-sans), "Segoe UI", system-ui, -apple-system, sans-serif;
-  --mono-font: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --bg: #FAF8F3;            /* paper cream */
+  --bg-2: #F6F4EE;          /* light cream for insets and inputs */
+  --surface: #FFFFFF;
+  --surface-2: #F7F5F0;     /* subtle inner panels */
+  --ink: #303B47;           /* charcoal, blue undertone */
+  --ink-2: #48535F;
+  --muted: #68737E;         /* slate */
+  --line: #E8E4DC;          /* warm hairline */
+  --line-2: #DDD8CD;
+  --brand: #338063;         /* evergreen */
+  --brand-2: #2A6C53;       /* hover */
+  --brand-soft: #E7F1EC;
+  --brand-ink: #FFFFFF;
+  --sky: #397FA3;           /* friendly blue (fills, lines) */
+  --sky-text: #2F6C8C;      /* blue for small text (AA) */
+  --sky-soft: #E6F0F5;
+  --amber: #C98A2B;         /* fills */
+  --amber-text: #8F6115;    /* amber for small text (AA) */
+  --amber-soft: #FAF0DC;
+  --violet: #7C6BB4;
+  --violet-soft: #EFECF8;
+  --rose: #B4505F;          /* decreases, warnings */
+  --rose-soft: #F8E9EB;
+  --glow-1: rgb(51 128 99 / 10%);
+  --glow-2: rgb(57 127 163 / 8%);
+  --shadow-sm: 0 1px 2px rgb(48 59 71 / 5%);
+  --shadow-md: 0 1px 2px rgb(48 59 71 / 4%), 0 10px 28px -14px rgb(48 59 71 / 16%);
+  --shadow-lg: 0 1px 3px rgb(48 59 71 / 4%), 0 28px 64px -28px rgb(48 59 71 / 22%);
+  --font-heading-stack: var(--font-heading), "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font: var(--font-body), "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono-font: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace; /* small labels only */
+  --r-sm: 10px;
+  --r-md: 14px;
   --r-lg: 20px;
+  --r-xl: 28px;
   --max: 1160px;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -43,7 +53,7 @@ body {
 }
 a { color: inherit; }
 :focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; border-radius: 8px; }
-h1, h2, h3, h4 { margin: 0; line-height: 1.12; letter-spacing: -0.025em; text-wrap: balance; }
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-heading-stack); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; text-wrap: balance; color: var(--ink); }
 p { margin: 0; }
 svg { display: block; }
 img { max-width: 100%; }
@@ -57,19 +67,19 @@ img { max-width: 100%; }
 @media (min-width: 720px) {
   .wrap { padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
 }
-.num { font-family: var(--mono-font); font-variant-numeric: tabular-nums; }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
 
 /* Buttons & chips */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font: 600 0.95rem/1 var(--font); text-decoration: none; padding: 13px 20px; border-radius: 12px;
+  font: 600 0.95rem/1 var(--font); text-decoration: none; padding: 13px 22px; border-radius: 999px; min-height: 44px;
   border: 1px solid transparent; transition: transform .15s ease, background .15s ease, border-color .15s ease;
   white-space: nowrap; cursor: pointer;
 }
 .btn svg { width: 16px; height: 16px; }
-.btn-primary { background: var(--brand); color: var(--brand-ink); box-shadow: 0 8px 24px -10px var(--brand); }
+.btn-primary { background: var(--brand); color: var(--brand-ink); box-shadow: 0 6px 18px -10px rgb(51 128 99 / 60%); }
 .btn-primary:hover { background: var(--brand-2); transform: translateY(-1px); }
-.btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--line-2); }
+.btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--line-2); box-shadow: var(--shadow-sm); }
 .btn-secondary:hover { border-color: var(--muted); }
 .btn-ghost { background: transparent; color: var(--ink-2); }
 .btn-ghost:hover { color: var(--ink); background: var(--surface); }
@@ -88,10 +98,10 @@ img { max-width: 100%; }
 .chip { align-self: flex-start; font-family: var(--mono-font); font-size: 0.68rem; font-weight: 600; padding: 2px 7px; border-radius: 6px; white-space: nowrap; }
 .chip.up { background: var(--brand-soft); color: var(--brand); }
 .chip.down { background: var(--rose-soft); color: var(--rose); }
-.chip.flat { background: var(--amber-soft); color: var(--amber); }
+.chip.flat { background: var(--amber-soft); color: var(--amber-text); }
 .soon {
   font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
-  padding: 3px 8px; border-radius: 999px; background: var(--amber-soft); color: var(--amber); white-space: nowrap;
+  padding: 3px 8px; border-radius: 999px; background: var(--amber-soft); color: var(--amber-text); white-space: nowrap;
 }
 
 /* Nav */
@@ -130,7 +140,7 @@ img { max-width: 100%; }
 @media (min-width: 960px) { .hero-top { grid-template-columns: 1.2fr 0.8fr; gap: 56px; } }
 .hero-copy, .hero-side { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
 .hero h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 800; letter-spacing: -0.04em; }
-.grad { background: linear-gradient(100deg, var(--brand) 10%, var(--sky) 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.grad { color: var(--brand); }
 .lede { font-size: 1.1rem; color: var(--muted); max-width: 36em; }
 .lede strong { color: var(--ink-2); font-weight: 600; }
 .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -189,8 +199,8 @@ img { max-width: 100%; }
 .ic svg { width: 15px; height: 15px; }
 .ic.g { background: var(--brand-soft); color: var(--brand); }
 .ic.r { background: var(--rose-soft); color: var(--rose); }
-.ic.b { background: var(--sky-soft); color: var(--sky); }
-.ic.a { background: var(--amber-soft); color: var(--amber); }
+.ic.b { background: var(--sky-soft); color: var(--sky-text); }
+.ic.a { background: var(--amber-soft); color: var(--amber-text); }
 .example { font-size: 0.72rem; color: var(--muted); text-align: right; font-style: italic; }
 
 /* Audience */
@@ -423,7 +433,7 @@ footer .wrap { padding-block: 40px; display: flex; flex-wrap: wrap; justify-cont
 .plan-badge { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
 .plan-badge.paid { background: var(--brand-soft); color: var(--brand); }
 .plan-badge.free { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line-2); }
-.plan-badge.demo { background: var(--sky-soft); color: var(--sky); }
+.plan-badge.demo { background: var(--sky-soft); color: var(--sky-text); }
 .meter { height: 8px; border-radius: 99px; background: var(--bg-2); overflow: hidden; }
 .meter i { display: block; height: 100%; background: var(--brand); border-radius: inherit; }
 .paywall { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; border: 1px dashed var(--line-2); border-radius: 14px; padding: 18px; }
@@ -431,3 +441,10 @@ footer .wrap { padding-block: 40px; display: flex; flex-wrap: wrap; justify-cont
 .success-card h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 800; }
 .ic.big { width: 48px; height: 48px; border-radius: 14px; }
 .ic.big svg { width: 24px; height: 24px; }
+
+/* ---------- Light theme surfaces ---------- */
+.card, .step, .value-item, .panel-card, .price-card, .auth-card, .later-item { box-shadow: var(--shadow-sm); }
+.price-card, .auth-card { box-shadow: var(--shadow-lg); }
+.window { box-shadow: var(--shadow-lg); }
+.logo { color: var(--ink); }
+.eyebrow { letter-spacing: 0.14em; }
